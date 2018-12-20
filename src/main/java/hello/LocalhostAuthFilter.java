@@ -3,6 +3,7 @@ package hello;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,6 +34,9 @@ public class LocalhostAuthFilter extends GenericFilterBean {
     private AuthenticationManager authenticationManager;
     private AuthenticationSuccessHandler successHandler;
     private AuthenticationDetailsSource<HttpServletRequest, ?> authenticationDetailsSource = new WebAuthenticationDetailsSource();
+
+    @Value("${login}")
+    private String login;
 
     /**
      * <p>Getter for the field <code>authenticationManager</code>.</p>
@@ -84,7 +88,8 @@ public class LocalhostAuthFilter extends GenericFilterBean {
         final HttpServletRequest request = (HttpServletRequest) req;
         final HttpServletResponse response = (HttpServletResponse) res;
         if (request.getLocalAddr().equals(request.getRemoteAddr())) {
-            final String username = System.getProperty("user.name").toUpperCase();
+//            final String username = System.getProperty("user.name").toUpperCase();
+            var username = login;
             log.info("user.name: " + username);
             if (authenticationIsRequired(username)) {
                 log.info("Request is local");
